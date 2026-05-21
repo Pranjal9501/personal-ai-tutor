@@ -16,6 +16,33 @@ mode = st.sidebar.selectbox(
     ["Beginner", "Intermediate", "Advanced"]
 )
 
+st.sidebar.header("Quiz Generator")
+
+quiz_topic = st.sidebar.text_input("Quiz Topic")
+
+quiz_difficulty = st.sidebar.selectbox(
+    "Quiz Difficulty",
+    ["Beginner", "Intermediate", "Advanced"]
+)
+
+if st.sidebar.button("Generate Quiz"):
+
+    quiz_payload = {
+        "topic": quiz_topic,
+        "difficulty": quiz_difficulty
+    }
+
+    quiz_response = requests.post(
+        "http://127.0.0.1:8000/quiz",
+        json=quiz_payload
+    )
+
+    quiz_data = quiz_response.json()["quiz"]
+
+    st.subheader("Generated Quiz")
+
+    st.write(quiz_data)
+
 st.write("Learn anything step-by-step with AI.")
 
 # Session state for chat history
