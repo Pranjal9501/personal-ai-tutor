@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from tutor import ask_tutor
 from typing import List
 from quiz_generator import generate_quiz
+from evaluator import evaluate_answer
 
 
 app = FastAPI()
@@ -17,6 +18,11 @@ class QuestionRequest(BaseModel):
 class QuizRequest(BaseModel):
     topic: str
     difficulty: str
+
+
+class EvaluationRequest(BaseModel):
+    question: str
+    student_answer: str
 
 
 @app.get("/")
@@ -49,4 +55,16 @@ def create_quiz(request: QuizRequest):
     return {
         "topic": request.topic,
         "quiz": quiz
+    }
+
+
+@app.post("/evaluate")
+def evaluate_student_answer(request: EvaluationRequest):
+    result = evaluate_answer(
+        request.question,
+        request.student_answer
+    )
+
+    return {
+        "evaluation": result
     }
